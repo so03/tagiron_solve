@@ -43,7 +43,35 @@ impl Executor {
 
 #[test]
 fn if_all_red_and_minimum_sum() {
-    let queries = vec![("sum red", [6]), ("how many red", [4])];
+    let all_combs = ALL_CARDS.into_iter().combinations(4).collect();
+
+    let executor = Executor::new();
+
+    let queries = vec![("sum red", vec![6]), ("how many red", vec![4])];
+
+    let result = executor.run(all_combs, queries);
+
+    assert_eq!(
+        result,
+        vec![vec![
+            Card {
+                number: 0,
+                color: Color::Red
+            },
+            Card {
+                number: 1,
+                color: Color::Red
+            },
+            Card {
+                number: 2,
+                color: Color::Red
+            },
+            Card {
+                number: 3,
+                color: Color::Red
+            }
+        ]]
+    );
 }
 
 // 赤の数の合計は？
