@@ -8,6 +8,15 @@ pub fn sum_red(v: VVCard, args: Vec<usize>) -> VVCard {
         .collect()
 }
 
+pub fn sum_red_bool(v: Vec<Card>, args: Vec<usize>) -> bool {
+    let sum = v
+        .into_iter()
+        .filter(|c| c.is_red())
+        .map(|c| c.number)
+        .sum::<u8>();
+    sum == args[0] as u8
+}
+
 // 赤の数字タイルは何枚ある？
 pub fn how_many_red(v: VVCard, args: Vec<usize>) -> VVCard {
     v.into_iter()

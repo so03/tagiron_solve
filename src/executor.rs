@@ -4,10 +4,10 @@ use itertools::Itertools;
 use std::collections::HashMap;
 
 pub type VVCard = Vec<Vec<Card>>;
-type Question = &'static str;
-type Args = Vec<usize>;
-type Callback = fn(v: VVCard, args: Vec<usize>) -> VVCard;
-type Queries = Vec<(Question, Args)>;
+pub type Question = &'static str;
+pub type Args = Vec<usize>;
+pub type Callback = fn(v: VVCard, args: Vec<usize>) -> VVCard;
+pub type Queries = Vec<(Question, Args)>;
 
 pub struct Executor {
     table: HashMap<&'static str, Callback>,
@@ -24,9 +24,9 @@ impl Executor {
         Executor { table }
     }
 
-    pub fn run(&self, mut cards: VVCard, queries: Queries) -> VVCard {
+    pub fn run(&self, mut cards: VVCard, queries: &Queries) -> VVCard {
         for (q, args) in queries {
-            cards = self.table[q](cards, args)
+            cards = self.table[q](cards, args.clone())
         }
         cards
     }
@@ -40,7 +40,7 @@ fn if_all_red_and_minimum_sum() {
 
     let queries = vec![("sum red", vec![6]), ("how many red", vec![4])];
 
-    let result = executor.run(all_combs, queries);
+    let result = executor.run(all_combs, &queries);
 
     assert_eq!(
         result,

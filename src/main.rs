@@ -1,23 +1,17 @@
 pub mod executor;
-pub mod models;
 pub mod functions;
+pub mod models;
+pub mod resolver;
 
 use executor::*;
 use itertools::Itertools;
+use models::Card;
 
 use crate::models::ALL_CARDS;
 
-fn main() {
-    let all_combs = ALL_CARDS.into_iter().combinations(4).collect();
+use std::collections::HashSet;
 
-    let executor = Executor::new();
-
-    let queries = vec![("sum red", vec![6]), ("how many red", vec![4])];
-
-    let result = executor.run(all_combs, queries);
-
-    println!("{:?}", result);
-}
+fn main() {}
 
 #[test]
 fn count_of_all_combs() {
