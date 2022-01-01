@@ -47,6 +47,10 @@ impl Cards {
         self.v.iter()
     }
 
+    pub fn len(&self) -> usize {
+        self.v.len()
+    }
+
     pub fn difference(&self, other: &Cards) -> Cards {
         let self_hs: HashSet<Card> = self.v.into_iter().collect();
         let other_hs: HashSet<Card> = other.v.into_iter().collect();
