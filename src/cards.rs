@@ -1,6 +1,12 @@
-use std::{collections::hash_map::DefaultHasher, hash::Hash, hash::Hasher};
+use std::{
+    collections::{hash_map::DefaultHasher, HashSet},
+    hash::Hash,
+    hash::Hasher,
+};
 
 use itertools::Itertools;
+
+use crate::combs::Combs;
 
 #[derive(Debug, Clone, PartialOrd, Ord)]
 pub struct Cards {
@@ -12,11 +18,42 @@ impl Cards {
         Cards { v }
     }
 
+    pub fn all() -> Self {
+        Cards {
+            v: ALL_CARDS.to_vec(),
+        }
+    }
+
+    pub fn all_combs() -> Combs {
+        let v = ALL_CARDS
+            .into_iter()
+            .combinations(4)
+            .map(|cs| Cards::new(cs))
+            .collect();
+        Combs { v }
+    }
+
+    pub fn combs(&self) -> Combs {
+        let v = self
+            .v
+            .into_iter()
+            .combinations(4)
+            .map(|cs| Cards::new(cs))
+            .collect();
+        Combs { v }
+    }
+
     pub fn iter(&self) -> std::slice::Iter<Card> {
         self.v.iter()
     }
-}
 
+    pub fn difference(&self, other: &Cards) -> Cards {
+        let self_hs: HashSet<Card> = self.v.into_iter().collect();
+        let other_hs: HashSet<Card> = other.v.into_iter().collect();
+        let diff: Vec<Card> = self_hs.difference(&other_hs).copied().collect();
+        Cards { v: diff }
+    }
+}
 
 impl Eq for Cards {}
 
@@ -114,10 +151,6 @@ pub enum Color {
     Red,
     Blue,
     Yellow,
-}
-
-pub fn all_cards_combs() -> Vec<Cards> {
-    ALL_CARDS.into_iter().combinations(4).map(|cs| Cards::new(cs)).collect()
 }
 
 pub const ALL_CARDS: [Card; 20] = [

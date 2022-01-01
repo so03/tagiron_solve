@@ -1,5 +1,5 @@
-use crate::models::{Card, Color, ALL_CARDS};
-use crate::{functions::*, models::Cards};
+use crate::cards::{Card, Color, ALL_CARDS};
+use crate::{functions::*, cards::Cards};
 use itertools::Itertools;
 use std::collections::HashMap;
 

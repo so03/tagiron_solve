@@ -1,37 +1,38 @@
+pub mod cards;
+pub mod combs;
 pub mod executor;
 pub mod functions;
-pub mod models;
 pub mod resolver;
 
-use executor::*;
-use itertools::Itertools;
-use models::Card;
-
-use crate::models::ALL_CARDS;
-
-use std::collections::HashSet;
+use cards::Cards;
 
 fn main() {
     let queries = todo!();
 
-    let c = todo!(); // cards, except mine
+    let c = Cards::all();
 
-    // all combinations
-    let comb = todo!();
+    // mine
+    let m = Cards::new(vec![]);
+
+    // except mine
+    let c = c.difference(&m);
+
+    // all combinations without mine
+    let combs = c.combs();
 
     // expectations of answers
     let mut ap = vec![];
 
-    let comb1 = comb.apply(queries[0]);
-    for cp1 in comb1 {
+    let combs1 = combs.apply(queries[0]);
+    for cp1 in combs1 {
         let c = c.difference(cp1);
-        let comb2 = c.combinations();
-        let comb2 = comb2.apply();
-        for cp2 in comb2 {
+        let combs2 = c.combs();
+        let combs2 = combs2.apply(queries[1]);
+        for cp2 in combs2 {
             let c = c.difference(cp2);
-            let comb3 = c.combinations();
-            let comb3 = comb3.apply();
-            for cp3 in comb3 {
+            let combs3 = c.combs();
+            let combs3 = combs3.apply(queries[2]);
+            for cp3 in combs3 {
                 let ans = c.difference(cp3);
                 if ans.len() == 4 {
                     ap.push(ans);
@@ -50,10 +51,4 @@ fn main() {
         println!("Answer is not decided.");
         println!("{:?}", ap);
     }
-}
-
-#[test]
-fn count_of_all_combs() {
-    let all_combs = ALL_CARDS.iter().combinations(4);
-    assert_eq!(4845, all_combs.count());
 }

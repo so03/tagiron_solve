@@ -1,5 +1,5 @@
 use crate::executor::VVCard;
-use crate::models::{Card, Color};
+use crate::cards::{Card, Color};
 
 // 赤の数の合計は？
 pub fn sum_red(v: VVCard, args: Vec<usize>) -> VVCard {

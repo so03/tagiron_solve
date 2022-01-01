@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{executor::*, models::{ALL_CARDS, Card, all_cards_combs, Cards}};
+use crate::{executor::*, cards::{ALL_CARDS, Card, all_cards_combs, Cards}};
 use itertools::Itertools;
 
 pub struct Resolver {
