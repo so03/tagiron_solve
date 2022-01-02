@@ -3,11 +3,12 @@ pub mod combs;
 pub mod executor;
 pub mod functions;
 pub mod resolver;
+pub mod queries;
 
 use cards::Cards;
 
 fn main() {
-    let queries = todo!();
+    let q = todo!();
 
     let c = Cards::all();
 
@@ -23,15 +24,15 @@ fn main() {
     // expectations of answers
     let mut ap = vec![];
 
-    let combs1 = combs.apply(queries[0]);
+    let combs1 = combs.apply(q[0]);
     for cp1 in combs1 {
         let c = c.difference(cp1);
         let combs2 = c.combs();
-        let combs2 = combs2.apply(queries[1]);
+        let combs2 = combs2.apply(q[1]);
         for cp2 in combs2 {
             let c = c.difference(cp2);
             let combs3 = c.combs();
-            let combs3 = combs3.apply(queries[2]);
+            let combs3 = combs3.apply(q[2]);
             for cp3 in combs3 {
                 let ans = c.difference(cp3);
                 if ans.len() == 4 {
