@@ -41,20 +41,32 @@ fn main() {
 
     let mut css1 = css;
     css1 = narrow_down(css1, q[0].clone());
+    println!("css1: {:?}", css1);
     for cp1 in css1.iter() {
         let cs = cs.difference(cp1);
         let mut css2 = cs.combs();
         css2 = narrow_down(css2, q[1].clone());
+        println!("css2: {:?}", css2);
 
         for cp2 in css2.iter() {
             let cs = cs.difference(cp2);
             let mut css3 = cs.combs();
             css3 = narrow_down(css3, q[2].clone());
+            println!("css3: {:?}", css3);
 
             for cp3 in css3.iter() {
-                let ans = cs.difference(cp3);
-                if ans.len() == 4 {
-                    ap.push(ans);
+                let cs = cs.difference(cp3);
+                println!("cs: {:?}", cs);
+                let mut css4 = cs.combs();
+                css4 = narrow_down(css4, q[3].clone());
+                println!("css4: {:?}", css4);
+
+                for cp4 in css4.iter() {
+                    let ans = cs.difference(cp4);
+                    println!("{:?}", ans);
+                    if ans.len() == 4 {
+                        ap.push(ans);
+                    }
                 }
             }
         }

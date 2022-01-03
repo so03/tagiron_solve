@@ -44,10 +44,21 @@ impl Cards {
     }
 
     pub fn difference(&self, other: &Cards) -> Cards {
-        let self_hs: HashSet<Card> = self.v.clone().into_iter().collect();
-        let other_hs: HashSet<Card> = other.v.clone().into_iter().collect();
-        let diff: Vec<Card> = self_hs.difference(&other_hs).copied().collect();
-        Cards { v: diff }
+        let mut other = other.clone();
+        let filtered = self
+            .v
+            .iter()
+            .filter(|&c| {
+                if let Some(i) = other.iter().position(|u| u == c) {
+                    other.v.remove(i);
+                    false
+                } else {
+                    true
+                }
+            })
+            .copied()
+            .collect_vec();
+        Cards { v: filtered }
     }
 }
 
