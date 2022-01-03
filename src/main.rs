@@ -1,49 +1,67 @@
 pub mod cards;
-pub mod combs;
-pub mod executor;
 pub mod functions;
-pub mod resolver;
-pub mod queries;
 
 use cards::Cards;
 
+use crate::functions::what_is_your_answer;
+
+type Q = (&'static str, Vec<usize>);
 fn main() {
-    let q = todo!();
+    let q: Vec<Vec<Q>> = vec![
+        vec![("what is your answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
+        vec![("what is your answer", vec![1, 2, 3, 4, 2, 2, 2, 2])],
+        vec![("what is your answer", vec![5, 6, 7, 8, 3, 1, 1, 1])],
+        vec![("what is your answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
+    ];
+    // expected answer is: [0, 0, 9, 9, 1, 2, 1, 2]
 
-    let c = Cards::all();
+    fn narrow_down(mut css: Vec<Cards>, qs: Vec<Q>) -> Vec<Cards> {
+        for q in qs {
+            css = query(q, css)
+        }
+        css
+    }
 
-    // mine
-    let m = Cards::new(vec![]);
+    fn query(q: Q, css: Vec<Cards>) -> Vec<Cards> {
+        css.into_iter()
+            .filter(|cs| match &q {
+                ("what is your answer", args) => what_is_your_answer(cs, args.clone()),
+                _ => todo!(),
+            })
+            .collect()
+    }
 
-    // except mine
-    let c = c.difference(&m);
+    let cs = Cards::all();
 
-    // all combinations without mine
-    let combs = c.combs();
+    // all combinations
+    let css = cs.combs();
 
     // expectations of answers
     let mut ap = vec![];
 
-    let combs1 = combs.apply(q[0]);
-    for cp1 in combs1 {
-        let c = c.difference(cp1);
-        let combs2 = c.combs();
-        let combs2 = combs2.apply(q[1]);
-        for cp2 in combs2 {
-            let c = c.difference(cp2);
-            let combs3 = c.combs();
-            let combs3 = combs3.apply(q[2]);
-            for cp3 in combs3 {
-                let ans = c.difference(cp3);
+    let mut css1 = css;
+    css1 = narrow_down(css1, q[0].clone());
+    for cp1 in css1.iter() {
+        let cs = cs.difference(cp1);
+        let mut css2 = cs.combs();
+        css2 = narrow_down(css2, q[1].clone());
+
+        for cp2 in css2.iter() {
+            let cs = cs.difference(cp2);
+            let mut css3 = cs.combs();
+            css3 = narrow_down(css3, q[2].clone());
+
+            for cp3 in css3.iter() {
+                let ans = cs.difference(cp3);
                 if ans.len() == 4 {
                     ap.push(ans);
                 }
-                // let comb4 = c.combinations();
             }
         }
     }
 
-    ap.uniq();
+    ap.sort();
+    ap.dedup();
 
     if ap.len() == 1 {
         println!("Answer is decided.");

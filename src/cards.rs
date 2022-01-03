@@ -1,12 +1,6 @@
-use std::{
-    collections::{hash_map::DefaultHasher, HashSet},
-    hash::Hash,
-    hash::Hasher,
-};
+use std::{collections::HashSet, hash::Hash};
 
 use itertools::Itertools;
-
-use crate::combs::Combs;
 
 #[derive(Debug, Clone, PartialOrd, Ord)]
 pub struct Cards {
@@ -24,23 +18,21 @@ impl Cards {
         }
     }
 
-    pub fn all_combs() -> Combs {
-        let v = ALL_CARDS
+    pub fn all_combs() -> Vec<Cards> {
+        ALL_CARDS
             .into_iter()
             .combinations(4)
-            .map(|cs| Cards::new(cs))
-            .collect();
-        Combs { v }
+            .map(Cards::new)
+            .collect()
     }
 
-    pub fn combs(&self) -> Combs {
-        let v = self
-            .v
+    pub fn combs(&self) -> Vec<Cards> {
+        self.v
+            .clone()
             .into_iter()
             .combinations(4)
-            .map(|cs| Cards::new(cs))
-            .collect();
-        Combs { v }
+            .map(Cards::new)
+            .collect()
     }
 
     pub fn iter(&self) -> std::slice::Iter<Card> {
@@ -52,8 +44,8 @@ impl Cards {
     }
 
     pub fn difference(&self, other: &Cards) -> Cards {
-        let self_hs: HashSet<Card> = self.v.into_iter().collect();
-        let other_hs: HashSet<Card> = other.v.into_iter().collect();
+        let self_hs: HashSet<Card> = self.v.clone().into_iter().collect();
+        let other_hs: HashSet<Card> = other.v.clone().into_iter().collect();
         let diff: Vec<Card> = self_hs.difference(&other_hs).copied().collect();
         Cards { v: diff }
     }
@@ -74,65 +66,67 @@ impl PartialEq for Cards {
     }
 }
 
-impl Hash for Cards {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        for c in self.v.iter().sorted() {
-            c.hash(state);
-        }
-    }
-}
+// Hash implementation
 
-#[test]
-fn test_cards_hash() {
-    let cards1 = Cards::new(vec![
-        Card {
-            number: 1,
-            color: Color::Blue,
-        },
-        Card {
-            number: 2,
-            color: Color::Red,
-        },
-        Card {
-            number: 4,
-            color: Color::Red,
-        },
-        Card {
-            number: 5,
-            color: Color::Yellow,
-        },
-    ]);
-    let cards2 = Cards::new(vec![
-        Card {
-            number: 5,
-            color: Color::Yellow,
-        },
-        Card {
-            number: 1,
-            color: Color::Blue,
-        },
-        Card {
-            number: 4,
-            color: Color::Red,
-        },
-        Card {
-            number: 2,
-            color: Color::Red,
-        },
-    ]);
+// impl Hash for Cards {
+//     fn hash<H: Hasher>(&self, state: &mut H) {
+//         for c in self.v.iter().sorted() {
+//             c.hash(state);
+//         }
+//     }
+// }
 
-    assert_eq!(calculate_hash(&cards1), calculate_hash(&cards2));
+// #[test]
+// fn test_cards_hash() {
+//     let cards1 = Cards::new(vec![
+//         Card {
+//             number: 1,
+//             color: Color::Blue,
+//         },
+//         Card {
+//             number: 2,
+//             color: Color::Red,
+//         },
+//         Card {
+//             number: 4,
+//             color: Color::Red,
+//         },
+//         Card {
+//             number: 5,
+//             color: Color::Yellow,
+//         },
+//     ]);
+//     let cards2 = Cards::new(vec![
+//         Card {
+//             number: 5,
+//             color: Color::Yellow,
+//         },
+//         Card {
+//             number: 1,
+//             color: Color::Blue,
+//         },
+//         Card {
+//             number: 4,
+//             color: Color::Red,
+//         },
+//         Card {
+//             number: 2,
+//             color: Color::Red,
+//         },
+//     ]);
 
-    fn calculate_hash<T: Hash>(t: &T) -> u64 {
-        let mut s = DefaultHasher::new();
-        t.hash(&mut s);
-        s.finish()
-    }
-}
+//     assert_eq!(calculate_hash(&cards1), calculate_hash(&cards2));
+
+//     fn calculate_hash<T: Hash>(t: &T) -> u64 {
+//         let mut s = DefaultHasher::new();
+//         t.hash(&mut s);
+//         s.finish()
+//     }
+// }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Card {
-    pub(crate) number: u8,
+    pub(crate) number: usize,
     pub(crate) color: Color,
 }
 

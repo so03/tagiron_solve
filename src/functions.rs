@@ -1,6 +1,26 @@
+use itertools::Itertools;
+
+use crate::cards::{Cards, Color, Card};
+
+
 // use crate::executor::VVCard;
 // use crate::cards::{Card, Color};
 
+// ForDebug
+// args: [1, 2, 3, 4, 1, 1, 2, 2]. 0..4 is number, 4..8 is color.
+pub fn what_is_your_answer(cs: &Cards, args:Vec<usize>) -> bool {
+    let colors = args[4..8].iter().map(|i| match *i {
+        1 => Color::Red,
+        2 => Color::Blue,
+        _ => Color::Yellow
+    });
+    let cards = args[0..4].iter().zip(colors).map(|(&number, color)| {
+        Card { number, color }
+    }).collect_vec();
+    let cards = Cards::new(cards);
+
+    cs == &cards
+}
 // // 赤の数の合計は？
 // pub fn sum_red(v: VVCard, args: Vec<usize>) -> VVCard {
 //     v.into_iter()
