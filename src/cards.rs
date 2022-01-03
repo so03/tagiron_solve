@@ -43,6 +43,10 @@ impl Cards {
         self.v.len()
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
     pub fn difference(&self, other: &Cards) -> Cards {
         let mut other = other.clone();
         let filtered = self
