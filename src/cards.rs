@@ -35,6 +35,40 @@ impl Cards {
             .collect()
     }
 
+    /// Returns index-list of given number.
+    pub fn positions_of(&self, num: usize) -> Vec<usize> {
+        self.v
+            .iter()
+            .enumerate()
+            .map(|(i, c)| if c.number == num { Some(i) } else { None })
+            .flatten()
+            .collect()
+    }
+
+    pub fn reds(&self) -> impl Iterator<Item = &Card> {
+        self.v.iter().filter(|c| c.color == Color::Red)
+    }
+
+    pub fn blues(&self) -> impl Iterator<Item = &Card> {
+        self.v.iter().filter(|c| c.color == Color::Blue)
+    }
+
+    pub fn red_sums(&self) -> usize {
+        self.reds().fold(0, |a, c| a + c.number)
+    }
+
+    pub fn blue_sums(&self) -> usize {
+        self.blues().fold(0, |a, c| a + c.number)
+    }
+
+    pub fn red_counts(&self) -> usize {
+        self.reds().count()
+    }
+
+    pub fn blue_counts(&self) -> usize {
+        self.blues().count()
+    }
+
     pub fn iter(&self) -> std::slice::Iter<Card> {
         self.v.iter()
     }

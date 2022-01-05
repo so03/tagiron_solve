@@ -3,7 +3,7 @@ use itertools::Itertools;
 use crate::cards::{Cards, Color, Card};
 
 
-// use crate::executor::VVCard;
+// use crate::executor::&Cards;
 // use crate::cards::{Card, Color};
 
 // ForDebug
@@ -21,55 +21,35 @@ pub fn what_is_your_answer(cs: &Cards, args:Vec<usize>) -> bool {
 
     cs == &cards
 }
-// // 赤の数の合計は？
-// pub fn sum_red(v: VVCard, args: Vec<usize>) -> VVCard {
-//     v.into_iter()
-//         .filter(|v| v.map(|c| c.number).sum::<u8>() == args[0] as u8)
-//         .collect()
-// }
+// 赤の数の合計は？
+pub fn sum_red(v: &Cards, args: Vec<usize>) -> bool {
+    v.red_sums() == args[0]
+}
 
-// pub fn sum_red_bool(v: Vec<Card>, args: Vec<usize>) -> bool {
-//     let sum = v
-//         .into_iter()
-//         .filter(|c| c.is_red())
-//         .map(|c| c.number)
-//         .sum::<u8>();
-//     sum == args[0] as u8
-// }
+// 青の数の合計は？
+pub fn sum_blue(v: &Cards, args: Vec<usize>) -> bool {
+    v.blue_sums() == args[0]
+}
 
-// // 赤の数字タイルは何枚ある？
-// pub fn how_many_red(v: VVCard, args: Vec<usize>) -> VVCard {
-//     v.into_iter()
-//         .filter(|v| v.filter(|c| c.color == Color::Red).count() == args[0])
-//         .collect()
-// }
+// 赤の数字タイルは何枚ある？
+pub fn how_many_red(v: &Cards, args: Vec<usize>) -> bool {
+    v.red_counts() == args[0]
+}
 
-// // 3はどこ？
-// pub fn where_is_three(v: VVCard, args: Vec<usize>) -> VVCard {
-//     v.into_iter()
-//         .filter(|v| {
-//             let mut flag = true;
-//             for (i, c) in v.enumerate() {
-//                 if args.iter().any(|j| *j == i) && c.number != 3 {
-//                     flag = false;
-//                 }
-//             }
-//             flag
-//         })
-//         .collect()
-// }
+// 3はどこ？
+pub fn where_is_three(v: &Cards, args: Vec<usize>) -> bool {
+    let mut a = v.positions_of(3);
+    a.sort_unstable();
+    let mut b = args;
+    b.sort_unstable();
+    a == b
+}
 
-// // 4はどこ？
-// pub fn where_is_four(v: VVCard, args: Vec<usize>) -> VVCard {
-//     v.into_iter()
-//         .filter(|v| {
-//             let mut flag = true;
-//             for (i, c) in v.enumerate() {
-//                 if args.iter().any(|j| *j == i) && c.number != 4 {
-//                     flag = false;
-//                 }
-//             }
-//             flag
-//         })
-//         .collect()
-// }
+// 4はどこ？
+pub fn where_is_four(v: &Cards, args: Vec<usize>) -> bool {
+    let mut a = v.positions_of(4);
+    a.sort_unstable();
+    let mut b = args;
+    b.sort_unstable();
+    a == b
+}
