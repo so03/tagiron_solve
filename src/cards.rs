@@ -35,6 +35,34 @@ impl Cards {
             .collect()
     }
 
+    fn nums(&self) -> Vec<usize> {
+        self.v.iter().map(|c| c.number).collect()
+    }
+
+    pub fn sum(&self) -> usize {
+        self.v.iter().fold(0, |a, c| a + c.number)
+    }
+
+    pub fn odds(&self) -> impl Iterator<Item = &Card> {
+        self.v.iter().filter(|c| c.number % 2 == 1)
+    }
+
+    pub fn big_three_sum(&self) -> usize {
+        let mut nums = self.nums();
+        nums.sort_unstable();
+        nums[1..].iter().sum()
+    }
+
+    pub fn small_three_sum(&self) -> usize {
+        let mut nums = self.nums();
+        nums.sort_unstable();
+        nums[0..3].iter().sum()
+    }
+
+    pub fn evens(&self) -> impl Iterator<Item = &Card> {
+        self.v.iter().filter(|v| v.number % 2 == 0)
+    }
+
     /// Returns index-list of given number.
     pub fn positions_of(&self, num: usize) -> Vec<usize> {
         self.v
@@ -67,6 +95,10 @@ impl Cards {
 
     pub fn blue_counts(&self) -> usize {
         self.blues().count()
+    }
+
+    pub fn is_same_color(&self, a: usize, b: usize) -> bool {
+        self.v[a].color == self.v[b].color
     }
 
     pub fn iter(&self) -> std::slice::Iter<Card> {
