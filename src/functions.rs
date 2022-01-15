@@ -160,7 +160,13 @@ pub fn small_three_sum(v: &Cards, args: Vec<usize>) -> bool {
 
 //  数が連続している数字タイルはどこ？
 pub fn where_is_continuous(v: &Cards, args: Vec<usize>) -> bool {
-    todo!()
+    let mut f = true;
+    for (i, j) in v.positions_of_continuous().iter().zip(&args) {
+        if i != j {
+            f = false;
+        }
+    }
+    f
 }
 //  同じ数字タイルのペアは何組ある？
 //  [共有情報カード]数字タイルの最大の数から、最小の数を引いた数は？

@@ -6,6 +6,7 @@ use cards::Cards;
 use crate::functions::what_is_your_answer;
 
 type Q = (&'static str, Vec<usize>);
+
 fn main() {
     let q: Vec<Vec<Q>> = vec![
         vec![("what is your answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
@@ -14,23 +15,6 @@ fn main() {
         vec![("what is your answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
     ];
     // expected answer is: [0, 0, 9, 9, 1, 2, 1, 2]
-
-    fn narrow_down(mut css: Vec<Cards>, qs: Vec<Q>) -> Vec<Cards> {
-        for q in qs {
-            css = query(q, css)
-        }
-        css
-    }
-
-    fn query(q: Q, css: Vec<Cards>) -> Vec<Cards> {
-        css.into_iter()
-            .filter(|cs| match &q {
-                ("what is your answer", args) => what_is_your_answer(cs, args.clone()),
-                _ => todo!(),
-            })
-            .collect()
-    }
-
     let cs = Cards::all();
 
     // all combinations
@@ -82,4 +66,20 @@ fn main() {
         println!("Answer is not decided.");
         println!("{:?}", ap);
     }
+}
+
+fn narrow_down(mut css: Vec<Cards>, qs: Vec<Q>) -> Vec<Cards> {
+    for q in qs {
+        css = query(q, css)
+    }
+    css
+}
+
+fn query(q: Q, css: Vec<Cards>) -> Vec<Cards> {
+    css.into_iter()
+        .filter(|cs| match &q {
+            ("what is your answer", args) => what_is_your_answer(cs, args.clone()),
+            _ => todo!(),
+        })
+        .collect()
 }

@@ -1,4 +1,4 @@
-use std::{collections::HashSet, hash::Hash};
+use std::{collections::HashSet, hash::Hash, panic};
 
 use itertools::Itertools;
 
@@ -9,6 +9,15 @@ pub struct Cards {
 
 impl Cards {
     pub fn new(v: Vec<Card>) -> Self {
+        Cards { v }
+    }
+
+    pub fn from_tuples(t: Vec<(usize, &str)>) -> Self {
+        let mut v = vec![];
+        for (n, c) in t {
+            let card = Card::new(n, c);
+            v.push(card);
+        }
         Cards { v }
     }
 
@@ -72,6 +81,24 @@ impl Cards {
             .flatten()
             .collect()
     }
+
+    /// Returns first-index's list of continuous numbers.
+    /// example) [1, 2, 3, 5] returns [0, 1]
+    pub fn positions_of_continuous(&self) -> Vec<usize> {
+        let mut ret = vec![];
+        for i in 0..(self.v.len() - 1) {
+            if self.v[i].number + 1 == self.v[i + 1].number {
+                ret.push(i);
+            }
+        }
+        ret
+    }
+
+    // TODO: after from tuples
+    // #[test]
+    // fn test_positions_of_continuous() {
+    //     let cards = Cards::new(vec![(1, "red"), (2, "red"), (3, "blue"), (4, "blue")]);
+    // }
 
     pub fn reds(&self) -> impl Iterator<Item = &Card> {
         self.v.iter().filter(|c| c.color == Color::Red)
@@ -147,64 +174,6 @@ impl PartialEq for Cards {
     }
 }
 
-// Hash implementation
-
-// impl Hash for Cards {
-//     fn hash<H: Hasher>(&self, state: &mut H) {
-//         for c in self.v.iter().sorted() {
-//             c.hash(state);
-//         }
-//     }
-// }
-
-// #[test]
-// fn test_cards_hash() {
-//     let cards1 = Cards::new(vec![
-//         Card {
-//             number: 1,
-//             color: Color::Blue,
-//         },
-//         Card {
-//             number: 2,
-//             color: Color::Red,
-//         },
-//         Card {
-//             number: 4,
-//             color: Color::Red,
-//         },
-//         Card {
-//             number: 5,
-//             color: Color::Yellow,
-//         },
-//     ]);
-//     let cards2 = Cards::new(vec![
-//         Card {
-//             number: 5,
-//             color: Color::Yellow,
-//         },
-//         Card {
-//             number: 1,
-//             color: Color::Blue,
-//         },
-//         Card {
-//             number: 4,
-//             color: Color::Red,
-//         },
-//         Card {
-//             number: 2,
-//             color: Color::Red,
-//         },
-//     ]);
-
-//     assert_eq!(calculate_hash(&cards1), calculate_hash(&cards2));
-
-//     fn calculate_hash<T: Hash>(t: &T) -> u64 {
-//         let mut s = DefaultHasher::new();
-//         t.hash(&mut s);
-//         s.finish()
-//     }
-// }
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Card {
     pub(crate) number: usize,
@@ -212,6 +181,9 @@ pub struct Card {
 }
 
 impl Card {
+    pub fn new(number : usize, c: impl Into<Color>) -> Self {
+        Self { number, color: c.into() }
+    }
     pub fn is_red(&self) -> bool {
         self.color == Color::Red
     }
@@ -230,6 +202,25 @@ pub enum Color {
     Red,
     Blue,
     Yellow,
+}
+
+impl From<&str> for Color {
+    fn from(s: &str) -> Self {
+       match s {
+           "red" | "Red" => {
+               Color::Red
+           },
+           "blue" | "Blue" => {
+               Color::Blue
+           }
+           "yellow" | "Yellow" => {
+               Color::Yellow
+           }
+           _ => {
+               panic!("this string does not support.")
+           }
+       } 
+    }
 }
 
 pub const ALL_CARDS: [Card; 20] = [
