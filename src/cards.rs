@@ -94,12 +94,6 @@ impl Cards {
         ret
     }
 
-    // TODO: after from tuples
-    // #[test]
-    // fn test_positions_of_continuous() {
-    //     let cards = Cards::new(vec![(1, "red"), (2, "red"), (3, "blue"), (4, "blue")]);
-    // }
-
     pub fn reds(&self) -> impl Iterator<Item = &Card> {
         self.v.iter().filter(|c| c.color == Color::Red)
     }
@@ -159,6 +153,20 @@ impl Cards {
     }
 }
 
+#[cfg(test)]
+mod card_tests {
+    use super::*;
+
+    #[test]
+    fn position_of_continuous() {
+        let cards = Cards::from_tuples(vec![(1, "red"), (2, "blue"), (3, "red"), (5, "yellow")]);
+        let ret = cards.positions_of_continuous();
+        assert_eq!(ret.len(), 2);
+        assert_eq!(ret[0], 0);
+        assert_eq!(ret[1], 1);
+    }
+}
+
 impl Eq for Cards {}
 
 impl PartialEq for Cards {
@@ -181,8 +189,11 @@ pub struct Card {
 }
 
 impl Card {
-    pub fn new(number : usize, c: impl Into<Color>) -> Self {
-        Self { number, color: c.into() }
+    pub fn new(number: usize, c: impl Into<Color>) -> Self {
+        Self {
+            number,
+            color: c.into(),
+        }
     }
     pub fn is_red(&self) -> bool {
         self.color == Color::Red
@@ -206,20 +217,14 @@ pub enum Color {
 
 impl From<&str> for Color {
     fn from(s: &str) -> Self {
-       match s {
-           "red" | "Red" => {
-               Color::Red
-           },
-           "blue" | "Blue" => {
-               Color::Blue
-           }
-           "yellow" | "Yellow" => {
-               Color::Yellow
-           }
-           _ => {
-               panic!("this string does not support.")
-           }
-       } 
+        match s {
+            "red" | "Red" => Color::Red,
+            "blue" | "Blue" => Color::Blue,
+            "yellow" | "Yellow" => Color::Yellow,
+            _ => {
+                panic!("this string does not support.")
+            }
+        }
     }
 }
 

@@ -168,6 +168,7 @@ pub fn where_is_continuous(v: &Cards, args: Vec<usize>) -> bool {
     }
     f
 }
+
 //  同じ数字タイルのペアは何組ある？
 //  [共有情報カード]数字タイルの最大の数から、最小の数を引いた数は？
 
