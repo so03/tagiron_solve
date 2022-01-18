@@ -170,7 +170,14 @@ pub fn where_is_continuous(v: &Cards, args: Vec<usize>) -> bool {
 }
 
 //  同じ数字タイルのペアは何組ある？
+pub fn how_many_same_number(v: &Cards, args: Vec<usize>) -> bool {
+    v.same_number_count() == args[0]
+}
 //  [共有情報カード]数字タイルの最大の数から、最小の数を引いた数は？
+pub fn max_diff_is(v: &Cards, args: Vec<usize>) -> bool {
+    v.max_diff() == args[0]
+}
 
+// For three players.
 //  [共有情報カード]中央の数字タイルは5以上？4以下？
 //  中央の3枚の数の合計は？

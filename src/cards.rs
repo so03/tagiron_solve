@@ -94,6 +94,24 @@ impl Cards {
         ret
     }
 
+    /// Returns same number card pair count
+    /// example) [1, 1, 2, 2] returns 2
+    pub fn same_number_count(&self) -> usize {
+        let mut counts = vec![0; 9];
+        for c in self.v.iter() {
+            counts[c.number] += 1;
+        }
+        counts.into_iter().filter(|i| *i >= 2).count()
+    }
+
+    /// Returns max number - min number
+    /// examples) [1, 2, 3, 4] returns 3
+    pub fn max_diff(&self) -> usize {
+        let max = self.v.iter().max().unwrap();
+        let min = self.v.iter().min().unwrap();
+        max.number - min.number
+    }
+
     pub fn reds(&self) -> impl Iterator<Item = &Card> {
         self.v.iter().filter(|c| c.color == Color::Red)
     }
@@ -164,6 +182,30 @@ mod card_tests {
         assert_eq!(ret.len(), 2);
         assert_eq!(ret[0], 0);
         assert_eq!(ret[1], 1);
+    }
+
+    #[test]
+    fn same_number_count() {
+        let cards = Cards::from_tuples(vec![(1, "red"), (1, "blue"), (5, "yellow"), (5, "yellow")]);
+        let ret = cards.same_number_count();
+        assert_eq!(ret, 2);
+
+        let cards = Cards::from_tuples(vec![(1, "red"), (2, "blue"), (5, "yellow"), (5, "yellow")]);
+        let ret = cards.same_number_count();
+        assert_eq!(ret, 1);
+
+        let cards = Cards::from_tuples(vec![(1, "red"), (2, "blue"), (4, "blue"), (5, "yellow")]);
+        let ret = cards.same_number_count();
+        assert_eq!(ret, 0);
+    }
+
+    #[test]
+    fn max_diff() {
+        let cards = Cards::from_tuples(vec![(1, "red"), (2, "blue"), (4, "blue"), (5, "yellow")]);
+        assert_eq!(cards.max_diff(), 4);
+
+        let cards = Cards::from_tuples(vec![(9, "red"), (2, "blue"), (4, "blue"), (5, "yellow")]);
+        assert_eq!(cards.max_diff(), 7);
     }
 }
 
