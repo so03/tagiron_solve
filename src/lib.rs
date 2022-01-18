@@ -1,19 +1,33 @@
-pub mod cards;
-pub mod functions;
+// To create and show Document
+// cargo doc --no-deps --open
+// With private items.
+// cargo doc --no-deps --document-private-items --open
+
+//! # Tagiron Solver
+//! 
+//! ## Usage
+//! ```
+//! let q: Vec<Vec<tagiron_solve::Q>> = vec![
+//!     vec![("what is your answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
+//!     vec![("what is your answer", vec![1, 2, 3, 4, 2, 2, 2, 2])],
+//!     vec![("what is your answer", vec![5, 6, 7, 8, 3, 1, 1, 1])],
+//!     vec![("what is your answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
+//! ];
+//!
+//! tagiron_solve::solve(q);
+//! ```
+
+mod cards;
+mod functions;
 
 use cards::Cards;
 
 use crate::functions::what_is_your_answer;
 
-type Q = (&'static str, Vec<usize>);
+pub type Q = (&'static str, Vec<usize>);
 
-fn main() {
-    let q: Vec<Vec<Q>> = vec![
-        vec![("what is your answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
-        vec![("what is your answer", vec![1, 2, 3, 4, 2, 2, 2, 2])],
-        vec![("what is your answer", vec![5, 6, 7, 8, 3, 1, 1, 1])],
-        vec![("what is your answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
-    ];
+/// Write the answer to stdout if it finds out.
+pub fn solve(q: Vec<Vec<Q>>) {
     // expected answer is: [0, 0, 9, 9, 1, 2, 1, 2]
     let cs = Cards::all();
 
