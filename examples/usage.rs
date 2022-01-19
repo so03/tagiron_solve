@@ -6,5 +6,5 @@ fn main() {
         vec![("what is your answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
     ];
 
-    tagiron_solve::solve(q);
+    println!("{:?}", tagiron_solve::solve(q));
 }
