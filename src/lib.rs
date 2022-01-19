@@ -4,7 +4,7 @@
 // cargo doc --no-deps --document-private-items --open
 
 //! # Tagiron Solver
-//! 
+//!
 //! ## Usage
 //! ```
 //! let q: Vec<Vec<tagiron_solve::Q>> = vec![
@@ -27,7 +27,7 @@ use crate::functions::what_is_your_answer;
 pub type Q = (&'static str, Vec<usize>);
 
 /// Write the answer to stdout if it finds out.
-pub fn solve(q: Vec<Vec<Q>>) {
+pub fn solve(q: Vec<Vec<Q>>) -> Result<Cards, &'static str> {
     // expected answer is: [0, 0, 9, 9, 1, 2, 1, 2]
     let cs = Cards::all();
 
@@ -74,11 +74,9 @@ pub fn solve(q: Vec<Vec<Q>>) {
     ap.dedup();
 
     if ap.len() == 1 {
-        println!("Answer is decided.");
-        println!("{:?}", ap);
+        Ok(ap[0].clone())
     } else {
-        println!("Answer is not decided.");
-        println!("{:?}", ap);
+        Err("Answer is not decided.")
     }
 }
 
@@ -96,4 +94,23 @@ fn query(q: Q, css: Vec<Cards>) -> Vec<Cards> {
             _ => todo!(),
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use cards::Cards;
+
+    #[test]
+    fn already_knew() {
+        let q: Vec<Vec<Q>> = vec![
+            vec![("what is your answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
+            vec![("what is your answer", vec![1, 2, 3, 4, 2, 2, 2, 2])],
+            vec![("what is your answer", vec![5, 6, 7, 8, 3, 1, 1, 1])],
+            vec![("what is your answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
+        ];
+
+        let expect = Cards::from_tuples(vec![(0, "red"), (0, "blue"), (9, "red"), (9, "blue")]);
+        assert_eq!(solve(q), Ok(expect));
+    }
 }
