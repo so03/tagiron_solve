@@ -8,10 +8,10 @@
 //! ## Usage
 //! ```
 //! let q: Vec<Vec<tagiron_solve::Q>> = vec![
-//!     vec![("what is your answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
-//!     vec![("what is your answer", vec![1, 2, 3, 4, 2, 2, 2, 2])],
-//!     vec![("what is your answer", vec![5, 6, 7, 8, 3, 1, 1, 1])],
-//!     vec![("what is your answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
+//!     vec![("what_is_your_answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
+//!     vec![("what_is_your_answer", vec![1, 2, 3, 4, 2, 2, 2, 2])],
+//!     vec![("what_is_your_answer", vec![5, 6, 7, 8, 3, 1, 1, 1])],
+//!     vec![("what_is_your_answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
 //! ];
 //!
 //! tagiron_solve::solve(q);
@@ -22,7 +22,7 @@ mod functions;
 
 use cards::Cards;
 
-use crate::functions::what_is_your_answer;
+use crate::functions::*;
 
 pub type Q = (&'static str, Vec<usize>);
 
@@ -89,8 +89,31 @@ fn narrow_down(mut css: Vec<Cards>, qs: Vec<Q>) -> Vec<Cards> {
 
 fn query(q: Q, css: Vec<Cards>) -> Vec<Cards> {
     css.into_iter()
-        .filter(|cs| match &q {
-            ("what is your answer", args) => what_is_your_answer(cs, args.clone()),
+        .filter(|v| match &q {
+            ("what_is_your_answer", args) => what_is_your_answer(v, args.clone()),
+            ("sum_red", args) => sum_red(v, args.clone()),
+            ("sum_blue", args) => sum_blue(v, args.clone()),
+            ("how_many_red", args) => how_many_red(v, args.clone()),
+            ("where_is_zero", args) => where_is_zero(v, args.clone()),
+            ("where_is_one", args) => where_is_one(v, args.clone()),
+            ("where_is_two", args) => where_is_two(v, args.clone()),
+            ("where_is_three", args) => where_is_three(v, args.clone()),
+            ("where_is_four", args) => where_is_four(v, args.clone()),
+            ("where_is_five", args) => where_is_five(v, args.clone()),
+            ("where_is_six", args) => where_is_six(v, args.clone()),
+            ("where_is_seven", args) => where_is_seven(v, args.clone()),
+            ("where_is_eight", args) => where_is_eight(v, args.clone()),
+            ("where_is_nine", args) => where_is_nine(v, args.clone()),
+            ("where_is_same_color", args) => where_is_same_color(v, args.clone()),
+            ("sum_all", args) => sum_all(v, args.clone()),
+            ("even_count", args) => even_count(v, args.clone()),
+            ("odd_count", args) => odd_count(v, args.clone()),
+            ("big_three_sum", args) => big_three_sum(v, args.clone()),
+            ("small_three_sum", args) => small_three_sum(v, args.clone()),
+            ("where_is_continuous", args) => where_is_continuous(v, args.clone()),
+            ("how_many_same_number", args) => how_many_same_number(v, args.clone()),
+            ("max_diff_is", args) => max_diff_is(v, args.clone()),
+
             _ => todo!(),
         })
         .collect()
@@ -104,10 +127,10 @@ mod tests {
     #[test]
     fn already_knew() {
         let q: Vec<Vec<Q>> = vec![
-            vec![("what is your answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
-            vec![("what is your answer", vec![1, 2, 3, 4, 2, 2, 2, 2])],
-            vec![("what is your answer", vec![5, 6, 7, 8, 3, 1, 1, 1])],
-            vec![("what is your answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
+            vec![("what_is_your_answer", vec![1, 2, 3, 4, 1, 1, 1, 1])], // mine
+            vec![("what_is_your_answer", vec![1, 2, 3, 4, 2, 2, 2, 2])],
+            vec![("what_is_your_answer", vec![5, 6, 7, 8, 3, 1, 1, 1])],
+            vec![("what_is_your_answer", vec![5, 6, 7, 8, 3, 2, 2, 2])],
         ];
 
         let expect = Cards::from_tuples(vec![(0, "red"), (0, "blue"), (9, "red"), (9, "blue")]);
